@@ -6,8 +6,7 @@ Before installing, ensure you have:
 
 1. **Docker** - Running and accessible
 2. **Python 3.11+** - For running the application
-3. **Ollama** - For AI/LLM capabilities
-4. **4GB+ RAM** - Recommended for smooth operation
+3. **Groq API Key** - For AI/LLM capabilities
 
 ---
 
@@ -15,22 +14,19 @@ Before installing, ensure you have:
 
 ### Method 1: Docker Compose (Easiest)
 
-This method runs everything in containers including Ollama.
+This method runs the dashboard container.
 
 ```bash
 # 1. Navigate to project directory
 cd docker-nl-dashboard
 
-# 2. Start all services
+# 2. Configure GROQ_API_KEY in Docker_NL_Dashboard/.env
+# Update the GROQ_API_KEY with your active key from console.groq.com
+
+# 3. Start all services
 docker-compose up -d
 
-# 3. Wait for services to start (30-60 seconds)
-docker-compose logs -f
-
-# 4. Pull llama3 model (first time only, ~4GB download)
-docker exec -it ollama-service ollama pull llama3
-
-# 5. Access dashboard
+# 4. Access dashboard
 # Open browser: http://localhost:8501
 ```
 
@@ -40,7 +36,6 @@ docker exec -it ollama-service ollama pull llama3
 docker-compose ps
 
 # Should show:
-# - ollama-service (healthy)
 # - docker-nl-dashboard (healthy)
 ```
 
@@ -50,34 +45,9 @@ docker-compose ps
 
 This method runs the dashboard locally with system Python.
 
-#### Step 1: Install Ollama
+#### Step 1: Configure Groq API Key
 
-**Linux:**
-```bash
-curl -fsSL https://ollama.ai/install.sh | sh
-```
-
-**macOS:**
-```bash
-brew install ollama
-```
-
-**Windows:**
-- Download from https://ollama.ai/download
-- Run the installer
-
-#### Step 2: Start Ollama and Pull Model
-
-```bash
-# Start Ollama service
-ollama serve
-
-# In another terminal, pull the model
-ollama pull llama3
-
-# Verify
-curl http://localhost:11434/api/tags
-```
+Ensure your `GROQ_API_KEY` is configured in `Docker_NL_Dashboard/.env` or exported to your environment. You can obtain a free key from console.groq.com.
 
 #### Step 3: Install Python Dependencies
 
@@ -117,28 +87,23 @@ Open browser: http://localhost:8501
 
 ### Method 3: Standalone Docker
 
-Run just the dashboard in Docker, with Ollama on host.
+Run the dashboard in Docker using the Groq API key from environment.
 
 ```bash
-# 1. Ensure Ollama is running on host
-ollama serve
-ollama pull llama3
-
-# 2. Build dashboard image
+# 1. Build dashboard image
 docker build -t docker-nl-dashboard .
 
-# 3. Run dashboard container
+# 2. Run dashboard container (passing Groq API key)
 docker run -d \
   --name dashboard \
-  --network host \
   -p 8501:8501 \
   -v /var/run/docker.sock:/var/run/docker.sock:ro \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
-  -e OLLAMA_HOST=http://localhost:11434 \
+  -e GROQ_API_KEY=your_groq_api_key_here \
   docker-nl-dashboard
 
-# 4. Access dashboard
+# 3. Access dashboard
 # Open browser: http://localhost:8501
 ```
 
@@ -172,8 +137,7 @@ python test_demo.py
 ## Verification Checklist
 
 ✅ Docker is running: `docker info`  
-✅ Ollama is running: `curl http://localhost:11434/api/tags`  
-✅ llama3 model available: `ollama list | grep llama3`  
+✅ Groq API Key is configured in settings or environment  
 ✅ Dashboard accessible: Open http://localhost:8501  
 ✅ Can list containers: Try "show running containers" in AI Agent  
 
@@ -200,22 +164,13 @@ sudo usermod -aG docker $USER
 
 ---
 
-### Ollama connection failed
+### Groq API connection failed
 
-**Error:** `Failed to connect to Ollama`
+**Error:** `Groq API connection failed`
 
 **Solution:**
-```bash
-# Check Ollama is running
-curl http://localhost:11434/api/tags
-
-# If not running, start it
-ollama serve
-
-# Verify model is downloaded
-ollama list
-ollama pull llama3
-```
+- Verify your API key is correct.
+- Ensure you have network access to api.groq.com.
 
 ---
 
@@ -239,19 +194,8 @@ streamlit run app.py --server.port 8502
 
 ### Slow AI responses
 
-**Causes:**
-- First run downloads model (~4GB)
-- Low RAM (need 4GB+)
-- CPU-only inference (GPU recommended)
-
 **Solution:**
-```bash
-# Check system resources
-docker stats
-
-# Use smaller model if needed
-ollama pull llama3:8b  # smaller variant
-```
+- Ensure network latency to Groq is normal. Groq is cloud-hosted and provides very fast responses.
 
 ---
 
@@ -280,7 +224,6 @@ sudo chmod 666 /var/run/docker.sock
 docker-compose down -v
 
 # Remove images
-docker rmi ollama/ollama:latest
 docker rmi docker-nl-dashboard_dashboard
 
 # Remove project directory
@@ -297,14 +240,6 @@ deactivate
 # Remove project directory
 cd ..
 rm -rf docker-nl-dashboard
-
-# Uninstall Ollama (optional)
-# Linux:
-sudo rm $(which ollama)
-sudo rm -rf /usr/share/ollama
-
-# macOS:
-brew uninstall ollama
 ```
 
 ---
@@ -313,15 +248,14 @@ brew uninstall ollama
 
 ### Minimum
 - CPU: 2 cores
-- RAM: 4GB
-- Disk: 10GB (5GB for llama3 model)
+- RAM: 2GB
+- Disk: 1GB
 - OS: Linux, macOS, Windows 10+
 
 ### Recommended
 - CPU: 4+ cores
-- RAM: 8GB+
-- Disk: 20GB SSD
-- GPU: Optional (faster inference)
+- RAM: 4GB+
+- Disk: 5GB SSD
 
 ---
 
@@ -341,7 +275,7 @@ After successful installation:
 
 - **GitHub Issues**: Report bugs and request features
 - **Documentation**: README.md for full usage guide
-- **Ollama Docs**: https://ollama.ai/docs
+- **Groq Docs**: https://console.groq.com/docs
 - **Streamlit Docs**: https://docs.streamlit.io
 
 ---

@@ -8,8 +8,8 @@
 # 1. Start everything
 docker-compose up -d
 
-# 2. Pull AI model (first time only, ~4GB)
-docker exec -it ollama-service ollama pull llama3
+# 2. Configure GROQ_API_KEY in Docker_NL_Dashboard/.env
+# Update the GROQ_API_KEY with your active key from console.groq.com
 
 # 3. Open browser
 http://localhost:8501
@@ -92,7 +92,7 @@ docker run -d --name mysql-test -e MYSQL_ROOT_PASSWORD=test mysql
 
 ### Settings Page
 - Docker configuration
-- Ollama model settings
+- Groq model settings
 - Database options
 
 ---
@@ -145,7 +145,6 @@ docker rm -f nginx-test redis-test mysql-test
 ### Complete Cleanup
 ```bash
 docker-compose down -v
-docker rmi ollama/ollama:latest
 docker rmi docker-nl-dashboard_dashboard
 ```
 
@@ -155,23 +154,8 @@ docker rmi docker-nl-dashboard_dashboard
 
 ### Dashboard won't load
 ```bash
-# Check Docker
-docker info
-
-# Check Ollama
-curl http://localhost:11434/api/tags
-
-# Restart services
-docker-compose restart
-```
-
-### Slow responses
-```bash
-# Check if model is downloaded
-ollama list
-
-# Download if missing
-ollama pull llama3
+# Check Groq configuration
+# Ensure GROQ_API_KEY environment variable is set or configured in Settings.
 ```
 
 ### Port conflict

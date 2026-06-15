@@ -8,7 +8,7 @@ docker-nl-dashboard/
 ├── app.py                          # Main Streamlit application (7 pages with routing)
 ├── agent.py                        # ReAct agent loop (7-step execution)
 ├── docker_manager.py               # Docker SDK wrapper (all operations)
-├── llm.py                          # Ollama integration (NL translation)
+├── llm.py                          # Groq integration (NL translation)
 ├── database.py                     # SQLite management (3 tables)
 ├── github_api.py                   # GitHub API integration
 ├── test_demo.py                    # Testing and demo script
@@ -27,8 +27,6 @@ docker-nl-dashboard/
 ├── PROJECT_STRUCTURE.md            # This file
 │
 ├── .gitignore                      # Git ignore rules
-├── .env.example                    # Environment variables template
-│
 ├── prompts/
 │   └── system_prompt.txt           # LLM system prompt for translation
 │
@@ -66,7 +64,7 @@ Main Streamlit application with 7 pages:
 #### `agent.py` (234 lines)
 ReAct-style agent implementation with 7-step execution:
 1. User Request - Accept input
-2. AI Analysis - Ollama translation
+2. AI Analysis - Groq translation
 3. Tool Selection - Determine action
 4. Tool Execution - Execute Docker operation
 5. Result Collection - Gather data
@@ -98,7 +96,7 @@ Docker SDK wrapper providing:
 - Resource calculation
 
 #### `llm.py` (263 lines)
-Ollama LLM integration:
+Groq LLM integration:
 - Natural language to JSON translation
 - Human-readable summary generation
 - System prompt management
@@ -148,7 +146,8 @@ Python dependencies:
 - pandas>=2.0.0
 - plotly>=5.17.0
 - requests>=2.31.0
-- ollama>=0.1.0
+- groq>=0.4.0
+- openai>=2.41.0
 
 #### `Dockerfile`
 Multi-stage production container:
@@ -162,17 +161,12 @@ Multi-stage production container:
 
 #### `docker-compose.yml`
 Multi-service orchestration:
-- **ollama** service: LLM backend
 - **dashboard** service: Application
 - Volume mounts: Docker socket, data, logs
 - Health checks
 - Network configuration
 - Auto-restart policies
 
-#### `.env.example`
-Environment variables template:
-- Docker configuration
-- Ollama settings
 - Database paths
 - Streamlit options
 - Logging configuration
@@ -184,8 +178,6 @@ Environment variables template:
 #### `start.sh` (Linux/Mac)
 Startup script that:
 - Checks Docker is running
-- Checks Ollama is running
-- Offers to pull llama3 model
 - Creates directories
 - Installs dependencies if needed
 - Starts Streamlit
@@ -258,7 +250,7 @@ Project organization and file descriptions
 ### Prompt Files
 
 #### `prompts/system_prompt.txt`
-System prompt for Ollama:
+System prompt for Groq:
 - Action definitions
 - JSON format specifications
 - Example translations
@@ -328,7 +320,7 @@ ReactAgent.execute() (agent.py)
 Step 1: Accept Request
     ↓
 Step 2: LLMManager.translate_to_action() (llm.py)
-    ↓ Ollama API call
+    ↓ Groq API call
     ↓ JSON action returned
     ↓
 Step 3: Tool Selection
@@ -384,10 +376,10 @@ Streamlit Pages → database.py
 - **Library:** Docker SDK for Python
 - **Operations:** List, start, stop, restart, logs, stats, health
 
-### Ollama
-- **Connection:** HTTP (default: `localhost:11434`)
-- **Library:** ollama-python
-- **Model:** llama3
+### Groq
+- **Connection:** HTTPS (api.groq.com)
+- **Library:** groq-python / openai
+- **Model:** llama-3.3-70b-versatile
 - **Operations:** Chat completions for NL translation
 
 ### GitHub
@@ -410,10 +402,9 @@ Streamlit Pages → database.py
 - File permissions control access
 - No network exposure
 
-### Ollama
-- Local HTTP endpoint
-- No authentication required
-- Model runs locally (no external API)
+### Groq
+- Cloud API endpoint (api.groq.com)
+- API key required (securely stored in .env)
 
 ### GitHub API
 - Public endpoints only
@@ -426,8 +417,8 @@ Streamlit Pages → database.py
 
 ### Environment Variables
 - `DOCKER_HOST` - Docker connection
-- `OLLAMA_HOST` - Ollama endpoint
-- `OLLAMA_MODEL` - Model name
+- `GROQ_API_KEY` - Groq API Key
+- `GROQ_MODEL` - Model name
 - `DATABASE_PATH` - Database location
 - `LOG_FILE_PATH` - Log file location
 - `STREAMLIT_SERVER_PORT` - Web port
@@ -484,21 +475,19 @@ Streamlit Pages → database.py
 
 - **Application Code:** <1 MB
 - **Python Dependencies:** ~500 MB
-- **Ollama llama3 Model:** ~4.7 GB
 - **Database (typical):** <10 MB
 - **Logs (typical):** <5 MB
-- **Total:** ~5.2 GB
+- **Total:** ~515 MB
 
 ---
 
 ## Runtime Memory Usage
 
 - **Streamlit App:** ~150 MB
-- **Ollama (llama3):** ~4-8 GB
 - **Docker SDK:** ~50 MB
-- **Total:** ~4.5-8.5 GB
+- **Total:** ~200 MB
 
-**Recommendation:** 8GB+ RAM for smooth operation
+**Recommendation:** 4GB+ RAM for smooth operation
 
 ---
 

@@ -5,7 +5,7 @@ A production-ready full-stack application that allows users to manage Docker con
 ## 🌟 Features
 
 - **Natural Language Interface**: Control Docker with plain English commands
-- **AI-Powered Translation**: Ollama LLM (llama3) translates commands to Docker operations
+- **AI-Powered Translation**: Groq API (llama-3.3-70b-versatile) translates commands to Docker operations
 - **ReAct Agent Loop**: Step-by-step reasoning visible in the UI
 - **Real-time Monitoring**: Container health, resource usage, and status tracking
 - **Data Visualization**: Interactive charts and graphs with Plotly
@@ -17,8 +17,7 @@ A production-ready full-stack application that allows users to manage Docker con
 
 - Python 3.11+
 - Docker Engine
-- Ollama with llama3 model
-- 4GB+ RAM recommended
+- Groq API Key
 
 ## 🚀 Quick Start
 
@@ -34,10 +33,8 @@ cd docker-nl-dashboard
 docker-compose up -d
 ```
 
-3. **Pull the llama3 model (first time only):**
-```bash
-docker exec -it ollama-service ollama pull llama3
-```
+3. **Configure the API Key in the `.env` file:**
+Make sure the `GROQ_API_KEY` in `Docker_NL_Dashboard/.env` is set to your active Groq API Key.
 
 4. **Access the dashboard:**
 ```
@@ -51,14 +48,8 @@ http://localhost:8501
 pip install -r requirements.txt
 ```
 
-2. **Install and start Ollama:**
-```bash
-# Download from https://ollama.ai
-ollama serve
-
-# In another terminal, pull the model
-ollama pull llama3
-```
+2. **Configure environment:**
+Set your `GROQ_API_KEY` in `Docker_NL_Dashboard/.env` or export it to your environment.
 
 3. **Run the dashboard:**
 ```bash
@@ -77,7 +68,7 @@ docker-nl-dashboard/
 ├── app.py                    # Main Streamlit application (7 pages)
 ├── agent.py                  # ReAct agent loop implementation
 ├── docker_manager.py         # Docker SDK wrapper
-├── llm.py                    # Ollama LLM integration
+├── llm.py                    # Groq LLM integration
 ├── database.py               # SQLite database management
 ├── github_api.py             # GitHub API integration
 ├── prompts/
@@ -227,17 +218,9 @@ docker info
 docker info
 ```
 
-### Ollama Configuration
+### Groq Configuration
 
-Default settings:
-- Model: `llama3`
-- Host: `http://localhost:11434`
-
-Change in Settings page or via environment variables:
-```bash
-export OLLAMA_HOST=http://custom-host:11434
-export OLLAMA_MODEL=llama3
-```
+Groq is configured in the `.env` file or on the Settings page using `GROQ_API_KEY` and `GROQ_MODEL`.
 
 ### Database Path
 
@@ -256,14 +239,13 @@ Change in Settings page or modify in `database.py`
 - Check Docker socket permissions
 - On Linux: `sudo usermod -aG docker $USER` (then logout/login)
 
-### Ollama Connection Failed
+### Groq Connection Failed
 
-**Error:** `Failed to connect to Ollama`
+**Error:** `Failed to connect to Groq`
 
 **Solution:**
-- Verify Ollama is running: `curl http://localhost:11434/api/tags`
-- Start Ollama: `ollama serve`
-- Pull the model: `ollama pull llama3`
+- Verify your `GROQ_API_KEY` is correct.
+- Ensure you have internet access to reach the Groq API endpoint.
 
 ### Port Already in Use
 
@@ -289,7 +271,7 @@ streamlit run app.py --server.port 8502
 
 - Docker socket access is read-only in production
 - No authentication implemented (add reverse proxy with auth for production)
-- Ollama runs locally (no external API calls)
+- Groq API calls are secure and fast
 - GitHub API uses public endpoints (no authentication required)
 
 ## 🚢 Production Deployment
@@ -357,7 +339,7 @@ Built as a production-ready demonstration of AI-powered Docker management with f
 
 ## 🙏 Acknowledgments
 
-- Ollama for local LLM capabilities
+- Groq for fast LLM inference capabilities
 - Docker SDK for Python
 - Streamlit for rapid UI development
 - Plotly for data visualization

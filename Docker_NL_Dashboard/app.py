@@ -901,7 +901,7 @@ st.sidebar.markdown(
     <div style='text-align: center'>
         <p style='color: #666; font-size: 12px;'>
             AI Docker NL Dashboard v1.0<br>
-            Powered by Ollama & Streamlit
+            Powered by Groq & Streamlit
         </p>
     </div>
     """,

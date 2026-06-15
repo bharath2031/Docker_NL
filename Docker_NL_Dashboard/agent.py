@@ -66,7 +66,7 @@ class ReactAgent:
         step1.complete({"request": user_request})
         
         # Step 2: AI Analysis
-        step2 = AgentStep(2, "AI Analysis", "Analyze intent using Ollama LLM")
+        step2 = AgentStep(2, "AI Analysis", "Analyze intent using Groq LLM")
         step2.start()
         self.steps.append(step2)
         

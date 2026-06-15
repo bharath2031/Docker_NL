@@ -14,30 +14,6 @@ if ! docker info > /dev/null 2>&1; then
 fi
 echo "✅ Docker is running"
 
-# Check if Ollama is running
-if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
-    echo "⚠️  Ollama is not running on localhost:11434"
-    echo "   Please start Ollama with: ollama serve"
-    echo "   Or use Docker Compose to start all services"
-    read -p "   Continue anyway? (y/N): " choice
-    if [[ ! $choice =~ ^[Yy]$ ]]; then
-        exit 1
-    fi
-else
-    echo "✅ Ollama is running"
-    
-    # Check if llama3 model is available
-    if ! curl -s http://localhost:11434/api/tags | grep -q "llama3"; then
-        echo "⚠️  llama3 model not found"
-        read -p "   Do you want to pull it now? (y/N): " choice
-        if [[ $choice =~ ^[Yy]$ ]]; then
-            echo "   Pulling llama3 model (this may take a few minutes)..."
-            ollama pull llama3
-        fi
-    else
-        echo "✅ llama3 model is available"
-    fi
-fi
 
 # Create necessary directories
 echo ""

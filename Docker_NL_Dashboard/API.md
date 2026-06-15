@@ -172,7 +172,7 @@ Get Docker system information.
 
 ### Class: `LLMManager`
 
-Ollama integration for natural language translation.
+Groq integration for natural language translation.
 
 #### Methods
 
@@ -221,14 +221,14 @@ print(summary)
 
 ##### `test_connection() -> Dict`
 
-Test Ollama connection.
+Test Groq connection.
 
 **Returns:**
 ```python
 {
     "success": True,
-    "model": "llama3",
-    "message": "Ollama connection successful"
+    "model": "llama-3.3-70b-versatile",
+    "message": "Groq API connection successful"
 }
 ```
 
@@ -515,7 +515,7 @@ for container in containers:
 ```python
 from llm import LLMManager
 
-llm = LLMManager(model="llama3")
+llm = LLMManager(model="llama-3.3-70b-versatile")
 
 # Custom translation
 action = llm.translate_to_action("I need to see all broken containers")

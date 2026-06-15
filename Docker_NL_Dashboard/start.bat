@@ -15,16 +15,6 @@ if errorlevel 1 (
 )
 echo ✅ Docker is running
 
-REM Check if Ollama is running
-curl -s http://localhost:11434/api/tags >nul 2>&1
-if errorlevel 1 (
-    echo ⚠️  Ollama is not running on localhost:11434
-    echo    Please start Ollama or use Docker Compose to start all services
-    set /p choice="   Continue anyway? (y/N): "
-    if /i not "%choice%"=="y" exit /b 1
-) else (
-    echo ✅ Ollama is running
-)
 
 REM Create necessary directories
 echo.
