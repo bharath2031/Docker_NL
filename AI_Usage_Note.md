@@ -10,7 +10,7 @@
 
 ## Overview
 
-This project is a full-stack AI-powered Docker management dashboard that allows users to control Docker containers using natural language commands. It uses Ollama (llama3) for LLM translation, a ReAct-style agent loop with 7 visible steps, Streamlit for the UI, SQLite for logging, and GitHub API for external integration.
+This project is a full-stack AI-powered Docker management dashboard that allows users to control Docker containers using natural language commands. It uses Groq (llama-3.3-70b-versatile) for LLM translation, a ReAct-style agent loop with 7 visible steps, Streamlit for the UI, SQLite for logging, and GitHub API for external integration.
 
 ---
 
@@ -27,7 +27,7 @@ This project is a full-stack AI-powered Docker management dashboard that allows 
 ## How AI Is Used
 
 ### 1. Natural Language to Docker Command Translation
-User types plain English (e.g., `restart nginx`) → Ollama llama3 translates to a structured JSON action → Docker SDK executes the operation.
+User types plain English (e.g., `restart nginx`) → Groq translates to a structured JSON action → Docker SDK executes the operation.
 
 ### 2. ReAct Agent Loop (7 Steps)
 Every command runs through a visible reasoning loop:
@@ -35,7 +35,7 @@ Every command runs through a visible reasoning loop:
 | Step | Name | Description |
 |------|------|-------------|
 | 1 | User Request | Accept and parse the natural language input |
-| 2 | AI Analysis | Ollama translates the input to a JSON action |
+| 2 | AI Analysis | Groq translates the input to a JSON action |
 | 3 | Tool Selection | Determine which Docker operation to run |
 | 4 | Tool Execution | Execute via Docker SDK |
 | 5 | Result Collection | Gather raw output |
@@ -56,12 +56,10 @@ Each log entry includes: timestamp, user prompt, generated action, execution res
 ```bash
 # Docker Compose (recommended)
 docker-compose up -d
-docker exec -it ollama-service ollama pull llama3
 # Open: http://localhost:8501
 
 # Local Python
 pip install -r requirements.txt
-ollama serve && ollama pull llama3
 streamlit run app.py
 ```
 
@@ -74,7 +72,7 @@ streamlit run app.py
 | `app.py` | 442 | Main Streamlit app — 7 pages |
 | `agent.py` | 234 | ReAct agent loop |
 | `docker_manager.py` | 272 | Docker SDK wrapper |
-| `llm.py` | 263 | Ollama LLM integration |
+| `llm.py` | 263 | Groq LLM integration |
 | `database.py` | 213 | SQLite management |
 | `github_api.py` | 105 | GitHub API integration |
 
