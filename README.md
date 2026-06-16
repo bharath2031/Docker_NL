@@ -1,8 +1,11 @@
 # 🐳 AI Docker Natural Language Health Dashboard
 
 Local URL: http://localhost:8501 (requires Docker Desktop running)
+
 Public URL: https://dockernlhealthdashboard-yfpgtcswzctdc7zumucp2e.streamlit.app
+
 cd "C:\Users\navee\OneDrive\文档\N Pro (2)\N Pro\docker-nl-dashboard"
+
 streamlit run app.py
 
 A production-ready full-stack application that allows users to manage Docker containers using natural language commands. Built with AI-powered translation, ReAct-style agent loops, and comprehensive monitoring capabilities.
